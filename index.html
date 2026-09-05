@@ -1,0 +1,779 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>Steady — Caregiver De-escalation Support</title>
+  <meta name="description" content="Immediate, research-informed de-escalation guidance for specialized caregivers working with complex youth." />
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0F1E2E;
+      --card: #1A2E42;
+      --fg: #F0F4F8;
+      --primary: #4A9FD4;
+      --accent: #5DCAA5;
+      --warning: #E8A030;
+      --muted: rgba(74,159,212,0.6);
+      --radius: 12px;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      width: 100%;
+      max-width: 520px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 28px;
+      padding: 40px 0;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      text-align: center;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      text-align: center;
+      letter-spacing: -0.02em;
+    }
+
+    .situation-label {
+      color: var(--primary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .confidentiality-bar {
+      background: rgba(232,160,48,0.12);
+      border: 1px solid rgba(232,160,48,0.3);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.78rem;
+      color: var(--warning);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn {
+      background: var(--card);
+      color: var(--fg);
+      border: 1px solid rgba(74,159,212,0.15);
+      border-radius: var(--radius);
+      padding: 14px;
+      font-family: var(--font);
+      font-size: 0.9rem;
+      font-weight: 400;
+      cursor: pointer;
+      text-align: left;
+      min-height: 68px;
+      display: flex;
+      align-items: flex-start;
+      line-height: 1.4;
+      transition: background 0.15s, color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:hover, .btn:active {
+      background: var(--primary);
+      color: var(--bg);
+      border-color: var(--primary);
+    }
+
+    .btn-full {
+      grid-column: span 2;
+      min-height: 56px;
+      background: transparent;
+      color: var(--primary);
+      border-color: rgba(74,159,212,0.3);
+      justify-content: center;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .btn-full:hover, .btn-full:active {
+      background: rgba(74,159,212,0.1);
+      color: var(--primary);
+    }
+
+    .intensity-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .btn-intensity {
+      background: var(--card);
+      color: var(--fg);
+      border: 1px solid rgba(74,159,212,0.15);
+      border-radius: var(--radius);
+      padding: 0 24px;
+      height: 76px;
+      font-family: var(--font);
+      font-size: 1.05rem;
+      font-weight: 400;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.15s, color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-intensity:hover, .btn-intensity:active {
+      background: var(--primary);
+      color: var(--bg);
+    }
+
+    .btn-back {
+      background: transparent;
+      color: var(--muted);
+      border: none;
+      font-family: var(--font);
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 16px;
+      width: 100%;
+      text-align: center;
+      height: 56px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-back:hover { color: var(--fg); }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius);
+      padding: 0 24px;
+      height: 54px;
+      font-family: var(--font);
+      font-size: 1.05rem;
+      font-weight: 500;
+      cursor: pointer;
+      width: 100%;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.15s;
+    }
+
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .script-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .script-section h3 {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .script-section p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--fg);
+    }
+
+    .script-section.say-this p {
+      font-size: 1.05rem;
+      font-weight: 500;
+      background: rgba(74,159,212,0.1);
+      padding: 14px;
+      border-radius: 8px;
+      border-left: 2px solid var(--primary);
+    }
+
+    .script-section.avoid p {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .incident-flag {
+      background: rgba(232,160,48,0.1);
+      border: 1px solid rgba(232,160,48,0.25);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 0.8rem;
+      color: var(--warning);
+      line-height: 1.5;
+    }
+
+    .divider {
+      width: 32px;
+      height: 1px;
+      background: rgba(74,159,212,0.2);
+    }
+
+    .step { margin-bottom: 6px; }
+
+    footer {
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 0.7rem;
+      color: rgba(74,159,212,0.35);
+      letter-spacing: 0.1em;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 150px;
+      background: var(--card);
+      color: var(--fg);
+      border: 1px solid rgba(74,159,212,0.2);
+      border-radius: var(--radius);
+      padding: 18px;
+      font-family: var(--font);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      resize: none;
+      outline: none;
+    }
+
+    textarea:focus { border-color: var(--primary); }
+    textarea::placeholder { color: rgba(240,244,248,0.3); }
+
+    .error-box {
+      background: rgba(180,50,50,0.2);
+      color: #ffaaaa;
+      border: 1px solid rgba(180,50,50,0.4);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 0.875rem;
+    }
+
+    .loading-text {
+      text-align: center;
+      color: var(--primary);
+      font-size: 1rem;
+      padding: 16px;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .gate-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      text-align: center;
+    }
+
+    .gate-wrap input {
+      width: 100%;
+      background: var(--card);
+      color: var(--fg);
+      border: 1px solid rgba(74,159,212,0.2);
+      border-radius: var(--radius);
+      padding: 16px;
+      font-family: var(--font);
+      font-size: 1rem;
+      text-align: center;
+      outline: none;
+      letter-spacing: 0.05em;
+    }
+
+    .gate-wrap input:focus { border-color: var(--primary); }
+  </style>
+</head>
+<body>
+  <main id="app"></main>
+  <footer>
+    <p>Steady — Caregiver Support Tool &nbsp;|&nbsp; Not a replacement for clinical supervision or emergency services</p>
+  </footer>
+
+  <script>
+    const BACKEND_URL = 'https://steady-api-t7ww.onrender.com';
+    const ACCESS_CODE = 'STEADYDEMO2026';
+    const UNLOCK_KEY = 'steady_agency_unlocked_demo';
+
+    const INCIDENT_REPORT_SITUATIONS = [
+      'Physical aggression',
+      'Self-harm risk',
+      'Property destruction',
+      'Elopement risk',
+      'Sexualized behavior'
+    ];
+
+    const SCRIPTS = {
+      "Physical aggression": {
+        "Building up": {
+          regulateYourself: "Drop your shoulders. Slow your exhale. Your nervous system is contagious. The youth will read your body before your words.",
+          whatToDo: "1. Create space -- increase physical distance immediately.\n2. Remove other youth from the area if possible.\n3. Lower your body posture slightly -- less threatening.\n4. If a second staff member is present, signal them now without escalating the environment.\n5. If you are single staffed, contact on-call immediately.\n6. Remove hard or throwable objects from reach if you can do so calmly.",
+          sayThis: "'I can see things are getting really hard right now. I am not here to fight you. I am going to stay right here.'",
+          avoidSaying: "'Calm down' or 'Stop it' -- directive language increases threat response. Do not issue ultimatums or consequences right now."
+        },
+        "Full escalation now": {
+          regulateYourself: "Do not match their energy. Slow everything down -- your voice, your movement, your breathing.",
+          whatToDo: "1. Do not block exits -- let them move.\n2. Keep yourself and others out of striking range.\n3. Remove bystanders immediately.\n4. If single staffed, contact on-call now -- do not attempt physical intervention alone.\n5. Physical intervention only if there is imminent risk of harm, agency threshold is met, and support is present.\n6. Contact on-call if situation is not de-escalating.",
+          sayThis: "'Nobody is going to get hurt here. I am staying calm. You are safe.'",
+          avoidSaying: "'I will call the police' as a threat -- this escalates. Do not threaten consequences mid-escalation. Do not raise your voice."
+        },
+        "It is over": {
+          regulateYourself: "Check your own body before you re-engage. Adrenaline takes 20 minutes to clear. Do not debrief until both you and the youth are regulated.",
+          whatToDo: "1. Give the youth space -- do not process immediately.\n2. Complete incident report while details are fresh.\n3. Notify on-call and document.\n4. Check in with co-staff.\n5. Return to the youth with warmth after 20-30 minutes minimum.",
+          sayThis: "'That was a big moment. I am glad everyone is okay. When you are ready I would like to check in with you.'",
+          avoidSaying: "'You could have really hurt someone' -- shame after escalation breaks trust and increases future risk."
+        }
+      },
+      "Self-harm risk": {
+        "Building up": {
+          regulateYourself: "Neutral tone. No alarm in your face or voice. Your calm is the intervention right now.",
+          whatToDo: "1. Stay with the youth -- do not leave them alone.\n2. Reduce stimulation in the environment.\n3. Remove or create distance from potential means if you can do so without drawing attention to it.\n4. Contact on-call to give a heads up.\n5. Do not interrogate -- connect first.",
+          sayThis: "'I am noticing you seem really overwhelmed right now. I am not going anywhere. Can I sit with you?'",
+          avoidSaying: "'Why would you do that to yourself' or 'You have so much to live for' -- both increase shame and shut down communication."
+        },
+        "Full escalation now": {
+          regulateYourself: "Stay calm and stay present. This is a moment that requires your steadiest self. Contact on-call now if not already done.",
+          whatToDo: "1. Do not leave the youth alone under any circumstances.\n2. Contact on-call immediately -- this is a clinical situation.\n3. Remove means from environment where safely possible.\n4. Do not bargain or make promises you cannot keep.\n5. If there is immediate risk to life, call 911 and follow agency protocol.",
+          sayThis: "'I am here with you right now. I am not going to leave. I need to make a quick call to get you some more support -- I will stay right here while I do it.'",
+          avoidSaying: "'Promise me you won't hurt yourself' -- you cannot hold that promise and it puts the burden on them. Do not minimize or dismiss what they are feeling."
+        },
+        "It is over": {
+          regulateYourself: "This is emotionally demanding work. Check in with yourself and your co-staff after.",
+          whatToDo: "1. Complete incident report immediately.\n2. Document what was said and observed accurately.\n3. Notify on-call and follow up with clinical team.\n4. Maintain connection with the youth -- warmth matters after.\n5. Do not debrief the incident with the youth without clinical guidance.",
+          sayThis: "'I am glad you are okay. I care about what happens to you. Someone from the team will follow up with you today.'",
+          avoidSaying: "Do not make the youth feel surveilled or punished. Avoid language that frames their safety planning as a consequence."
+        }
+      },
+      "Peer conflict": {
+        "Building up": {
+          regulateYourself: "Stay neutral. You are not a mediator right now -- you are a regulator. Do not take sides.",
+          whatToDo: "1. Separate the youth before it escalates -- casually if possible.\n2. One staff member with each youth.\n3. Reduce audience -- other youth watching increases escalation risk.\n4. Do not ask what happened yet.\n5. Regulate first, gather information later.",
+          sayThis: "To each youth separately: 'Come with me for a minute. I want to hear what is going on for you.'",
+          avoidSaying: "'Who started it' -- this is irrelevant in the acute moment and escalates both youth."
+        },
+        "Full escalation now": {
+          regulateYourself: "Physical safety first. Your job right now is containment, not resolution.",
+          whatToDo: "1. Separate immediately -- one staff per youth if staffing allows.\n2. If single staffed, prioritize the most escalated youth and contact on-call immediately for backup.\n3. Remove bystanders.\n4. Do not attempt mediation while either youth is escalated.\n5. Physical intervention only if imminent risk of harm and agency threshold is met.\n6. Contact on-call if you cannot separate safely.",
+          sayThis: "'Everyone needs space right now. We are going to take a break and come back to this when everyone is calmer.'",
+          avoidSaying: "'Work it out' or 'You are both acting like children' -- dismissive language increases aggression."
+        },
+        "It is over": {
+          regulateYourself: "Reconnect with each youth individually before any joint processing.",
+          whatToDo: "1. Check in with each youth separately.\n2. Document the incident.\n3. Only attempt mediation or joint processing when both youth are fully regulated and with clinical guidance if needed.\n4. Follow house protocol for peer conflict documentation.",
+          sayThis: "'I want to hear your side of what happened. We are going to figure this out together -- just not right this second.'",
+          avoidSaying: "Do not force a premature apology or reconciliation. It does not resolve the conflict and creates resentment."
+        }
+      },
+      "School refusal": {
+        "Building up": {
+          regulateYourself: "Release the attendance outcome. Your job right now is the relationship, not the schedule.",
+          whatToDo: "1. Do not escalate around time pressure.\n2. Reduce demands -- stop giving instructions.\n3. Sit nearby without agenda.\n4. Contact school to notify of potential absence.\n5. Explore what is driving the refusal once regulated.",
+          sayThis: "'You don't have to figure out school right this second. Let's just start with getting you something to eat.'",
+          avoidSaying: "'You have to go' or 'This is not optional' -- power struggles over school refusal never produce attendance and always damage relationship."
+        },
+        "Full escalation now": {
+          regulateYourself: "School is not happening today. Shift your goal entirely to safety and connection.",
+          whatToDo: "1. Drop the school agenda completely.\n2. Follow meltdown or aggression protocol as appropriate.\n3. Notify school and document absence.\n4. Contact on-call if escalation is significant.\n5. Do not revisit school until youth is fully regulated.",
+          sayThis: "'We are not talking about school right now. Let's just get through this moment together.'",
+          avoidSaying: "Any mention of school, consequences for missing, or future attendance. Not now."
+        },
+        "It is over": {
+          regulateYourself: "Reconnect before you problem solve. The relationship is the leverage.",
+          whatToDo: "1. Warm check-in with no agenda.\n2. Document the refusal and any known triggers.\n3. Notify the clinical team if this is a pattern.\n4. Collaborative problem solving around school barriers happens later -- not today.",
+          sayThis: "'That was a hard morning. I am not mad. When you are ready I would like to understand what makes school feel impossible sometimes.'",
+          avoidSaying: "'You cannot keep doing this' -- shame produces more avoidance, not more attendance."
+        }
+      },
+      "Staff transition resistance": {
+        "Building up": {
+          regulateYourself: "This is attachment behaviour, not defiance. Do not take it personally. Your regulated handoff is the intervention.",
+          whatToDo: "1. Incoming staff leads the transition -- be present and warm from the moment of arrival.\n2. Outgoing staff stays calm and does not over-explain their departure.\n3. Give the youth advance notice of the transition where possible.\n4. Reduce demands at transition time.\n5. Outgoing staff says a clear, warm goodbye -- do not sneak out.",
+          sayThis: "Outgoing staff: 'I am heading out now. [Name] is here and I will see you [next shift]. You are in good hands.'\nIncoming staff: 'Good to see you. I am here for the night. What do you need right now?'",
+          avoidSaying: "Outgoing staff: 'I have to go, stop making this hard' -- this confirms the youth's fear of abandonment."
+        },
+        "Full escalation now": {
+          regulateYourself: "The youth is communicating that transitions feel like loss. Stay regulated and stay present.",
+          whatToDo: "1. Outgoing staff does not leave mid-escalation if it is safe to stay briefly.\n2. Both staff present -- incoming leads, outgoing supports.\n3. Do not force the transition -- allow a brief overlap.\n4. Contact on-call if escalation is significant.\n5. Document the incident.",
+          sayThis: "'I know this is hard. [Outgoing name] is not disappearing. They will be back. I am here now and I am not going anywhere tonight.'",
+          avoidSaying: "'Every shift you do this' -- pattern-naming during escalation increases shame and worsens behaviour."
+        },
+        "It is over": {
+          regulateYourself: "Debrief with your co-staff. Transition resistance is a team pattern to address, not an individual staff problem.",
+          whatToDo: "1. Document the transition incident.\n2. Flag for clinical team if this is a consistent pattern.\n3. Incoming staff reconnects warmly once youth is regulated.\n4. Consider transition supports -- advance warning, transition objects, predictable routines.",
+          sayThis: "'Thanks for sticking with me through that. I am glad you are settled now. What would make next time a little easier?'",
+          avoidSaying: "Do not process the transition resistance with the youth immediately after. Give it time."
+        }
+      },
+      "Property destruction": {
+        "Building up": {
+          regulateYourself: "Objects can be replaced. Your calm protects people. Do not react to property -- react to the person.",
+          whatToDo: "1. Remove other youth from the area.\n2. Create space between yourself and the youth.\n3. Do not attempt to stop property destruction unless life safety is at risk.\n4. Remove breakable or dangerous objects from reach if you can do so calmly.\n5. Signal co-staff if present.",
+          sayThis: "'I can see you are really overwhelmed right now. The stuff does not matter. I just want to make sure you are okay.'",
+          avoidSaying: "'Stop that right now' or 'Do you know how much that costs' -- both escalate. Do not block or grab objects."
+        },
+        "Full escalation now": {
+          regulateYourself: "Stay back. Stay calm. Let it happen if no one is at risk.",
+          whatToDo: "1. Ensure all people are out of range.\n2. Do not physically intervene to protect property.\n3. Physical intervention only if there is imminent risk of harm to a person.\n4. Contact on-call.\n5. Document everything for incident report.",
+          sayThis: "'Nobody needs to get hurt here. I am going to stay over here while you get this out.'",
+          avoidSaying: "Do not threaten consequences during active destruction. It will escalate."
+        },
+        "It is over": {
+          regulateYourself: "Your reaction to the aftermath sends a message. Stay neutral.",
+          whatToDo: "1. Complete incident report.\n2. Do not make the youth clean up immediately -- this is a consequence conversation for later.\n3. Check in warmly once the youth is regulated.\n4. Notify on-call and document damage.\n5. Collaborative problem solving about the destruction happens much later with clinical support.",
+          sayThis: "'That was a big moment. I am glad no one got hurt. When you are ready I would like to sit with you for a bit.'",
+          avoidSaying: "'Look at what you did' -- shame after destruction increases future dysregulation."
+        }
+      },
+      "Elopement risk": {
+        "Building up": {
+          regulateYourself: "Chasing triggers flight. Your calm and your connection are your only leverage right now.",
+          whatToDo: "1. Do not block exits or physically prevent movement.\n2. Reduce all demands immediately.\n3. Stay nearby but not in front of them.\n4. Know your elopement protocol -- have the on-call number ready.\n5. Remove barriers to connection -- get on their level, stay calm.",
+          sayThis: "'You don't have to go anywhere right now. I am not going to stop you but I would really like you to stay. Can you tell me what is going on?'",
+          avoidSaying: "'You are not allowed to leave' -- this guarantees elopement. Do not physically block the door."
+        },
+        "Full escalation now": {
+          regulateYourself: "If they leave, follow protocol. Do not chase.",
+          whatToDo: "1. Contact on-call immediately if they leave or are about to leave.\n2. Maintain visual contact from a distance if safe to do so.\n3. Do not chase or physically restrain unless imminent life safety risk.\n4. Follow agency elopement protocol exactly.\n5. Document time, direction, appearance, and last known location.",
+          sayThis: "If still present: 'I hear you. You want to leave. I need you to know I am going to have to make some calls if you go. I would rather you stay so we can figure this out together.'\nIf they have left: Follow protocol -- do not attempt solo retrieval.",
+          avoidSaying: "'If you leave there will be consequences' -- threats during elopement risk increase danger."
+        },
+        "It is over": {
+          regulateYourself: "Relief is normal. Do not let your relief become a lecture.",
+          whatToDo: "1. Warm welcome back -- no consequences in the moment of return.\n2. Complete incident report.\n3. Notify on-call of return.\n4. Check youth for safety.\n5. Debrief with clinical team about triggers and prevention.",
+          sayThis: "'I am really glad you are back. Are you okay? Let's get you settled.'",
+          avoidSaying: "'Do you know how worried everyone was' -- guilt on return increases likelihood of future elopement."
+        }
+      },
+      "Verbal aggression toward staff": {
+        "Building up": {
+          regulateYourself: "This is not about you. The words are symptoms of dysregulation. Your job is to not take the bait.",
+          whatToDo: "1. Lower your voice -- do not match their volume.\n2. Reduce audience -- other youth watching escalates.\n3. Disengage from the content of what they are saying.\n4. Create space without abandoning.\n5. Do not defend yourself or correct them right now.",
+          sayThis: "'I can hear you are really upset right now. I am not going to argue. I am going to give you some space and I will check back in a few minutes.'",
+          avoidSaying: "'You do not talk to me like that' -- asserting authority during verbal aggression always escalates. Do not threaten, defend, or engage with the content."
+        },
+        "Full escalation now": {
+          regulateYourself: "Disengage. Your presence is escalating right now. Remove yourself if it is safe to do so.",
+          whatToDo: "1. Reduce your presence -- step back or leave the immediate space.\n2. Maintain safety monitoring from a distance.\n3. Do not send another staff member in immediately.\n4. Let the youth run out of steam.\n5. Document accurately -- note exact language used.",
+          sayThis: "'I am going to give you some space right now. I will be right over here when you are ready.'",
+          avoidSaying: "Anything. Silence and distance are the intervention right now."
+        },
+        "It is over": {
+          regulateYourself: "You are allowed to feel affected by verbal aggression. Check in with yourself and your co-staff.",
+          whatToDo: "1. Document accurately and objectively.\n2. Do not process the verbal aggression with the youth immediately.\n3. Reconnect warmly when the youth is regulated -- do not hold a grudge.\n4. Flag for clinical team if this is a pattern.\n5. Debrief with supervisor if the content was particularly personal or threatening.",
+          sayThis: "'Hey. I am not holding what happened earlier against you. Are you doing okay now?'",
+          avoidSaying: "'You owe me an apology' -- forced apologies are meaningless and damage the relationship."
+        }
+      },
+      "Sexualized behavior": {
+        "Building up": {
+          regulateYourself: "Neutral is the goal. No shock, no embarrassment, no anger in your face or voice. Your reaction teaches them whether this is safe to bring to adults.",
+          whatToDo: "1. Respond calmly and matter-of-factly.\n2. Set a clear professional boundary without shaming.\n3. Reduce audience if other youth are present.\n4. Do not explore or process the behavior in the moment.\n5. Document and report per agency policy.",
+          sayThis: "'That is not something we do here. I am not upset with you but I need you to stop. We can talk later if something is going on for you.'",
+          avoidSaying: "'That is disgusting' or any expression of shock or moral judgment -- both increase shame and reduce the likelihood the youth will disclose if something unsafe is happening to them."
+        },
+        "Full escalation now": {
+          regulateYourself: "Stay professional. Your job is safety and boundaries, not processing.",
+          whatToDo: "1. State the boundary clearly and calmly.\n2. Remove the youth from the situation if it involves another young person.\n3. Separate youth involved and ensure safety.\n4. Contact on-call immediately.\n5. Document accurately -- this may be a disclosure or a safety concern.",
+          sayThis: "'This needs to stop right now. I am going to get some support. Everyone needs to go to their own space.'",
+          avoidSaying: "Do not make assumptions about what the behavior means. Do not process or question in the moment."
+        },
+        "It is over": {
+          regulateYourself: "This is one of the more emotionally complex situations in residential care. Debrief with your supervisor.",
+          whatToDo: "1. Complete incident report thoroughly and objectively.\n2. Contact on-call and clinical team.\n3. Do not discuss the incident with other youth.\n4. Follow agency reporting obligations -- this may trigger a duty to report.\n5. Do not debrief the behavior with the youth without clinical guidance.",
+          sayThis: "Only with clinical guidance. Do not initiate this conversation independently.",
+          avoidSaying: "Do not discuss this incident with co-staff beyond what is operationally necessary. Confidentiality is essential."
+        }
+      },
+      "Substance use disclosure": {
+        "Building up": {
+          regulateYourself: "No alarm, no judgment. Your reaction in the next 30 seconds determines whether this youth ever discloses to an adult again.",
+          whatToDo: "1. Stay calm and keep your face neutral.\n2. Assess safety first -- are they currently intoxicated or at risk?\n3. Do not immediately launch into consequences or warnings.\n4. Follow agency substance use protocol.\n5. Contact on-call to notify.",
+          sayThis: "'Thank you for telling me. I am not going to freak out. I want to make sure you are safe first -- can you tell me a bit more about what is going on?'",
+          avoidSaying: "'Do you know what that stuff does to your brain' or 'How could you do that' -- both shut down disclosure and damage trust."
+        },
+        "Full escalation now": {
+          regulateYourself: "If the youth is intoxicated, this is a medical safety situation first.",
+          whatToDo: "1. Assess level of intoxication -- are they coherent, stable, at risk?\n2. Contact on-call immediately.\n3. If there is any concern about overdose or medical emergency, call 911.\n4. Do not leave the youth alone.\n5. Document what you observe -- substance type if known, behavior, physical state.",
+          sayThis: "'I am going to stay with you right now. I need to make a call to get you some support. You are not in trouble -- I just want to make sure you are okay.'",
+          avoidSaying: "'What were you thinking' -- not now. Safety first, everything else later."
+        },
+        "It is over": {
+          regulateYourself: "This is a clinical and relational situation. Your documentation and your relationship both matter here.",
+          whatToDo: "1. Complete incident report.\n2. Notify on-call and clinical team.\n3. Follow agency substance use protocol for next steps.\n4. Reconnect warmly with the youth when they are stable.\n5. Do not lecture -- the clinical team will address the substance use therapeutically.",
+          sayThis: "'I am glad you are okay. I am not here to judge you. Someone from the team is going to follow up with you about this -- that is just part of how we take care of you here.'",
+          avoidSaying: "'This cannot happen again' -- you cannot enforce that and the statement damages trust without producing change."
+        }
+      }
+    };
+
+    // STATE
+    let screen = 'situations';
+    let selectedSituation = null;
+    let selectedIntensity = null;
+    let isLoading = false;
+    let customScript = null;
+    let errorMsg = null;
+
+    function requiresIncidentReport(situation) {
+      return INCIDENT_REPORT_SITUATIONS.includes(situation);
+    }
+
+    function render() {
+      const app = document.getElementById('app');
+      app.className = 'fade-in';
+      void app.offsetWidth;
+
+      if (screen === 'situations') {
+        app.innerHTML = `
+          <div class="fade-in">
+            <h1>What is happening right now?</h1>
+          </div>
+          <div class="confidentiality-bar">
+            Do not enter identifying information about any youth into this tool.
+          </div>
+          <div class="grid fade-in">
+            ${Object.keys(SCRIPTS).map(s => `
+              <button class="btn" onclick="selectSituation('${s}')">${s}</button>
+            `).join('')}
+           <button class="btn btn-full" onclick="selectSituation('Something else')">Something else...</button>
+          </div>
+        `;
+      }
+
+      else if (screen === 'intensity') {
+        app.innerHTML = `
+          <div class="fade-in">
+            <p class="situation-label">${selectedSituation}</p>
+            <h2 style="margin-top:8px">How intense is it?</h2>
+          </div>
+          <div class="intensity-stack fade-in">
+            <button class="btn-intensity" onclick="selectIntensity('Building up')">Building up</button>
+            <button class="btn-intensity" onclick="selectIntensity('Full escalation now')">Full escalation now</button>
+            <button class="btn-intensity" onclick="selectIntensity('It is over')">It is over</button>
+          </div>
+          <button class="btn-back" onclick="reset()">Back</button>
+        `;
+      }
+
+      else if (screen === 'script') {
+        const script = SCRIPTS[selectedSituation][selectedIntensity];
+        const steps = script.whatToDo.split('\n').filter(Boolean);
+        const incidentFlag = requiresIncidentReport(selectedSituation) && selectedIntensity !== 'Building up';
+        app.innerHTML = `
+          <div class="fade-in" style="text-align:center">
+            <p class="situation-label">${selectedSituation}</p>
+            <p style="color:var(--muted);font-size:0.875rem;margin-top:4px">${selectedIntensity}</p>
+          </div>
+          ${incidentFlag ? `<div class="incident-flag">Incident report likely required. Contact on-call and document per agency protocol.</div>` : ''}
+          <div class="script-card fade-in">
+            <div class="script-section">
+              <h3>Regulate Yourself</h3>
+              <p>${script.regulateYourself}</p>
+            </div>
+            <div class="divider"></div>
+            <div class="script-section">
+              <h3>What To Do</h3>
+              ${steps.map(step => `<p class="step">${step}</p>`).join('')}
+            </div>
+            <div class="divider"></div>
+            <div class="script-section say-this">
+              <h3>Say This</h3>
+              <p>${script.sayThis}</p>
+            </div>
+            <div class="divider"></div>
+            <div class="script-section avoid">
+              <h3>Avoid Saying</h3>
+              <p>${script.avoidSaying}</p>
+            </div>
+          </div>
+          <button class="btn-primary" onclick="reset()" style="margin-top:4px">New situation</button>
+          <button class="btn-back" onclick="goBack()">Back</button>
+        `;
+      }
+
+      else if (screen === 'custom') {
+        if (isLoading) {
+          app.innerHTML = `
+            <div class="fade-in" style="text-align:center">
+              <h2>Finding guidance...</h2>
+              <p class="loading-text" style="margin-top:16px">This takes about 10 seconds.</p>
+            </div>
+          `;
+        } else if (customScript) {
+          const steps = customScript.whatToDo.split('\n').filter(Boolean);
+          app.innerHTML = `
+            <div class="script-card fade-in">
+              <div class="script-section">
+                <h3>Regulate Yourself</h3>
+                <p>${customScript.regulateYourself}</p>
+              </div>
+              <div class="divider"></div>
+              <div class="script-section">
+                <h3>What To Do</h3>
+                ${steps.map(step => `<p class="step">${step}</p>`).join('')}
+              </div>
+              <div class="divider"></div>
+              <div class="script-section say-this">
+                <h3>Say This</h3>
+                <p>${customScript.sayThis}</p>
+              </div>
+              <div class="divider"></div>
+              <div class="script-section avoid">
+                <h3>Avoid Saying</h3>
+                <p>${customScript.avoidSaying}</p>
+              </div>
+            </div>
+            <div class="confidentiality-bar">Reminder: Do not document identifying youth information in this tool. Use your agency incident report system.</div>
+            <button class="btn-primary" onclick="reset()" style="margin-top:4px">New situation</button>
+          `;
+        } else {
+          app.innerHTML = `
+            <div class="fade-in" style="text-align:center">
+              <h2>Describe the situation</h2>
+<p class="situation-label" style="margin-top:8px">Do not include identifying information about the youth.</p>
+              <p style="color:rgba(74,159,212,0.4);font-size:0.75rem;margin-top:8px;text-align:center;line-height:1.5">Your input is sent to an AI model to generate guidance. No data is stored or retained. Describe the situation only, not the youth.</p>
+            </div>
+            <div class="fade-in" style="display:flex;flex-direction:column;gap:14px">
+              <textarea id="customText" placeholder="e.g. Youth is refusing to come out of their room, escalating verbally, throwing items..."></textarea>
+              ${errorMsg ? `<div class="error-box">${errorMsg}</div>` : ''}
+              <button class="btn-primary" onclick="submitCustom()">Get guidance</button>
+              <button class="btn-back" onclick="reset()">Cancel</button>
+            </div>
+          `;
+        }
+      }
+    }
+
+    function selectSituation(s) {
+      if (s === 'Something else') {
+        screen = 'custom';
+        customScript = null;
+        errorMsg = null;
+      } else {
+        selectedSituation = s;
+        screen = 'intensity';
+      }
+      render();
+    }
+
+    function selectIntensity(i) {
+      selectedIntensity = i;
+      screen = 'script';
+      render();
+    }
+
+    function goBack() {
+      screen = 'intensity';
+      render();
+    }
+
+    function reset() {
+      screen = 'situations';
+      selectedSituation = null;
+      selectedIntensity = null;
+      customScript = null;
+      errorMsg = null;
+      isLoading = false;
+      render();
+    }
+
+    async function submitCustom() {
+      const text = document.getElementById('customText')?.value?.trim();
+      if (!text) return;
+      isLoading = true;
+      errorMsg = null;
+      render();
+
+      try {
+       const res = await fetch(`${BACKEND_URL}/generate-script-agency`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ situation: text })
+        });
+        if (!res.ok) throw new Error('Server error');
+        const data = await res.json();
+        customScript = data;
+      } catch (e) {
+        errorMsg = 'Something went wrong. Please try again.';
+        isLoading = false;
+        render();
+        return;
+      }
+      isLoading = false;
+      render();
+    }
+
+    function checkGate() {
+      const app = document.getElementById('app');
+      if (localStorage.getItem(UNLOCK_KEY) === 'true') {
+        render();
+        return;
+      }
+      app.innerHTML = `
+        <div class="gate-wrap fade-in">
+          <h1>Enter access code</h1>
+          <input type="password" id="gateInput" placeholder="Access code" autocomplete="off" />
+          <div id="gateError" class="error-box" style="display:none">Incorrect code, please try again.</div>
+          <button class="btn-primary" onclick="tryUnlock()">Unlock</button>
+        </div>
+      `;
+      document.getElementById('gateInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') tryUnlock();
+      });
+    }
+
+    function tryUnlock() {
+      const input = document.getElementById('gateInput').value.trim();
+      if (input.toUpperCase() === ACCESS_CODE) {
+        localStorage.setItem(UNLOCK_KEY, 'true');
+        render();
+      } else {
+        document.getElementById('gateError').style.display = 'block';
+      }
+    }
+
+    checkGate();
+  </script>
+</body>
+</html>
