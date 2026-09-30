@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -332,7 +333,6 @@
   </footer>
 
   <script>
-    const BACKEND_URL = 'https://steady-api-t7ww.onrender.com';
     const ACCESS_CODE = 'STEADYDEMO2026';
     const UNLOCK_KEY = 'steady_agency_unlocked_demo';
 
@@ -551,9 +551,6 @@
     let screen = 'situations';
     let selectedSituation = null;
     let selectedIntensity = null;
-    let isLoading = false;
-    let customScript = null;
-    let errorMsg = null;
 
     function requiresIncidentReport(situation) {
       return INCIDENT_REPORT_SITUATIONS.includes(situation);
@@ -569,14 +566,10 @@
           <div class="fade-in">
             <h1>What is happening right now?</h1>
           </div>
-          <div class="confidentiality-bar">
-            Do not enter identifying information about any youth into this tool.
-          </div>
           <div class="grid fade-in">
             ${Object.keys(SCRIPTS).map(s => `
               <button class="btn" onclick="selectSituation('${s}')">${s}</button>
             `).join('')}
-           <button class="btn btn-full" onclick="selectSituation('Something else')">Something else...</button>
           </div>
         `;
       }
@@ -632,68 +625,11 @@
         `;
       }
 
-      else if (screen === 'custom') {
-        if (isLoading) {
-          app.innerHTML = `
-            <div class="fade-in" style="text-align:center">
-              <h2>Finding guidance...</h2>
-              <p class="loading-text" style="margin-top:16px">This takes about 10 seconds.</p>
-            </div>
-          `;
-        } else if (customScript) {
-          const steps = customScript.whatToDo.split('\n').filter(Boolean);
-          app.innerHTML = `
-            <div class="script-card fade-in">
-              <div class="script-section">
-                <h3>Regulate Yourself</h3>
-                <p>${customScript.regulateYourself}</p>
-              </div>
-              <div class="divider"></div>
-              <div class="script-section">
-                <h3>What To Do</h3>
-                ${steps.map(step => `<p class="step">${step}</p>`).join('')}
-              </div>
-              <div class="divider"></div>
-              <div class="script-section say-this">
-                <h3>Say This</h3>
-                <p>${customScript.sayThis}</p>
-              </div>
-              <div class="divider"></div>
-              <div class="script-section avoid">
-                <h3>Avoid Saying</h3>
-                <p>${customScript.avoidSaying}</p>
-              </div>
-            </div>
-            <div class="confidentiality-bar">Reminder: Do not document identifying youth information in this tool. Use your agency incident report system.</div>
-            <button class="btn-primary" onclick="reset()" style="margin-top:4px">New situation</button>
-          `;
-        } else {
-          app.innerHTML = `
-            <div class="fade-in" style="text-align:center">
-              <h2>Describe the situation</h2>
-<p class="situation-label" style="margin-top:8px">Do not include identifying information about the youth.</p>
-              <p style="color:rgba(74,159,212,0.4);font-size:0.75rem;margin-top:8px;text-align:center;line-height:1.5">Your input is sent to an AI model to generate guidance. No data is stored or retained. Describe the situation only, not the youth.</p>
-            </div>
-            <div class="fade-in" style="display:flex;flex-direction:column;gap:14px">
-              <textarea id="customText" placeholder="e.g. Youth is refusing to come out of their room, escalating verbally, throwing items..."></textarea>
-              ${errorMsg ? `<div class="error-box">${errorMsg}</div>` : ''}
-              <button class="btn-primary" onclick="submitCustom()">Get guidance</button>
-              <button class="btn-back" onclick="reset()">Cancel</button>
-            </div>
-          `;
-        }
-      }
     }
 
     function selectSituation(s) {
-      if (s === 'Something else') {
-        screen = 'custom';
-        customScript = null;
-        errorMsg = null;
-      } else {
-        selectedSituation = s;
-        screen = 'intensity';
-      }
+      selectedSituation = s;
+      screen = 'intensity';
       render();
     }
 
@@ -712,35 +648,6 @@
       screen = 'situations';
       selectedSituation = null;
       selectedIntensity = null;
-      customScript = null;
-      errorMsg = null;
-      isLoading = false;
-      render();
-    }
-
-    async function submitCustom() {
-      const text = document.getElementById('customText')?.value?.trim();
-      if (!text) return;
-      isLoading = true;
-      errorMsg = null;
-      render();
-
-      try {
-       const res = await fetch(`${BACKEND_URL}/generate-script-agency`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ situation: text })
-        });
-        if (!res.ok) throw new Error('Server error');
-        const data = await res.json();
-        customScript = data;
-      } catch (e) {
-        errorMsg = 'Something went wrong. Please try again.';
-        isLoading = false;
-        render();
-        return;
-      }
-      isLoading = false;
       render();
     }
 
